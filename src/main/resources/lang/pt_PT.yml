@@ -1,0 +1,181 @@
+prefix: "&8[&bAuth&8]&r"
+
+auth:
+  title:
+    register: "&cREGISTAR"
+    register-sub: "&7Usa &f/register <password> <password>"
+    login: "&cLOGIN"
+    login-sub: "&7Usa &f/login <password>"
+    twofa: "&62FA NECESSÁRIO"
+    twofa-sub: "&7Usa &f/2fa code <código de 6 dígitos>"
+
+errors:
+  players-only: "{prefix} &cEste comando só pode ser usado por jogadores."
+  no-permission: "{prefix} &cNão tens permissão."
+  must-login: "{prefix} &cTens de fazer login primeiro."
+  must-register: "{prefix} &cTens de te registar primeiro."
+  command-blocked: "{prefix} &cTens de fazer login primeiro. Permitidos: &f/register, /login, /recover, /2fa&c."
+  locked-out-login: "{prefix} &cDemasiadas tentativas de login. Tenta novamente em &f{seconds}s&c."
+  locked-out-recovery: "{prefix} &cDemasiadas tentativas de recuperação. Tenta novamente em &f{seconds}s&c."
+
+register:
+  usage: "{prefix} &7Uso: &f/register <password> <password>"
+  already-registered: "{prefix} &cJá estás registado."
+  max-accounts-per-ip: "{prefix} &cDemasiadas contas a partir da tua ligação (limite: &f{max}&c). Contacta um admin se for engano."
+  password-too-short: "{prefix} &cA palavra-passe tem de ter pelo menos &f{min}&c caracteres."
+  password-mismatch: "{prefix} &cAs palavras-passe não coincidem."
+  success: "{prefix} &aRegistado!"
+
+recovery-recommend:
+  line1: "{prefix} &eRecomendamos fortemente que configures perguntas de recuperação de conta, para caso te esqueças da tua password, possas recuperá-la."
+  line2: "{prefix} &7Para isso, usa &f/recovery setquestion <pergunta...>&7 e depois &f/recovery setanswer <resposta...>&7."
+
+login:
+  usage: "{prefix} &7Uso: &f/login <password>"
+  not-registered: "{prefix} &cNão estás registado. Usa &f/register <password> <password>&c."
+  success: "{prefix} &aLogin efetuado."
+  wrong-password: "{prefix} &cPalavra-passe incorreta."
+  autologin: "{prefix} &aAuto-login aceite (IP de confiança)."
+  grace: "{prefix} &aBem-vindo de volta! Sessão restaurada."
+  uuid-mismatch: "{prefix} &cDiscrepância de conta detetada. Faz login manualmente com &f/login <password>&c."
+  fingerprint-mismatch: "{prefix} &eVerificação do cliente falhou. Faz login com &f/login <password>&e."
+  autologin-denied: "{prefix} &cAuto-login negado por razões de segurança. Usa &f/login <password>&c."
+
+security:
+  uuid-mismatch-warning: "{prefix} &c⚠ Discrepância de UUID para &f{player}&c: esperado &f{expected}&c obtido &f{actual}&c do IP &f{ip}&c."
+  login-failure-warning: "{prefix} &c⚠ Tentativa de login falhada para &f{player}&c do IP &f{ip}&c."
+  admin-action: "{prefix} &e⚙ Admin &f{admin}&e executou &f{action}&e em &f{player}&e."
+
+changepassword:
+  usage: "{prefix} &7Uso: &f/changepassword <oldPassword> <newPassword> <confirm>"
+  success: "{prefix} &aPalavra-passe alterada com sucesso."
+  wrong-old: "{prefix} &cA palavra-passe antiga está incorreta."
+
+logout:
+  success: "{prefix} &eTerminaste a sessão."
+
+autologin:
+  usage: "{prefix} &7Uso: &f/autologin <on|off|status>"
+  status-on: "{prefix} &aAuto-login está &fON&a."
+  status-off: "{prefix} &cAuto-login está &fOFF&c."
+  enabled: "{prefix} &aAuto-login ativado."
+  disabled: "{prefix} &eAuto-login desativado."
+
+recovery:
+  must-set-question-first: "{prefix} &cDefine primeiro uma pergunta: &f/recovery setquestion <pergunta...>"
+  setquestion-usage: "{prefix} &7Uso: &f/recovery setquestion <pergunta...>"
+  setanswer-usage: "{prefix} &7Uso: &f/recovery setanswer <resposta...>"
+  setquestion-success: "{prefix} &aPergunta de recuperação guardada."
+  setanswer-success: "{prefix} &aResposta de recuperação guardada."
+  status-none: "{prefix} &eA recuperação não está configurada."
+  status-ok: "{prefix} &aA recuperação está configurada."
+
+recover:
+  usage: "{prefix} &7Uso: &f/recover &7| &f/recover answer <resposta...> &7| &f/recover 2fa <código> &7| &f/recover setpassword <nova> <confirm>"
+  not-registered: "{prefix} &cNão estás registado."
+  no-recovery: "{prefix} &cEsta conta não tem nenhum método de recuperação (sem pergunta e sem 2FA)."
+  use-2fa-code: "{prefix} &7O 2FA está ativo na tua conta. Usa &f/recover 2fa <código de 6 dígitos> &7para verificar a tua identidade, depois &f/recover setpassword <nova> <confirm>&7."
+  2fa-usage: "{prefix} &7Uso: &f/recover 2fa <código de 6 dígitos>"
+  2fa-accepted: "{prefix} &aCódigo 2FA aceite. Agora define uma nova palavra-passe: &f/recover setpassword <nova> <confirm>"
+  2fa-wrong: "{prefix} &cCódigo 2FA inválido."
+  no-2fa-use-questions: "{prefix} &7O 2FA não está ativo. Usa &f/recover answer <resposta...> &7em vez disso."
+  question: "{prefix} &7Pergunta de recuperação: &f{question}"
+  answer-hint: "{prefix} &7Responde com: &f/recover answer <a tua resposta...>"
+  answer-usage: "{prefix} &7Uso: &f/recover answer <resposta...>"
+  answer-wrong: "{prefix} &cResposta incorreta."
+  answer-correct: "{prefix} &aResposta aceite. Agora define uma nova palavra-passe: &f/recover setpassword <nova> <confirm>"
+  must-verify-first: "{prefix} &cTens de verificar a tua identidade primeiro. Usa &f/recover answer <resposta...> &cou &f/recover 2fa <código>&c."
+  setpassword-usage: "{prefix} &7Uso: &f/recover setpassword <nova> <confirm>"
+  setpassword-success: "{prefix} &aReset da palavra-passe concluído. Usa &f/login <password>&a."
+
+# ============================================================
+# Autenticação de dois fatores
+# ============================================================
+2fa:
+  usage: "{prefix} &7Uso: &f/2fa <setup|code|disable|status>"
+  disabled-by-server: "{prefix} &cA autenticação de dois fatores não está ativa neste servidor."
+  verify-prompt: "{prefix} &6Verificação 2FA necessária. &7Usa &f/2fa code <código de 6 dígitos> &7ou um código de backup."
+  verify-usage: "{prefix} &7Uso: &f/2fa code <código de 6 dígitos>"
+  verify-success: "{prefix} &a2FA verificado! Agora estás totalmente autenticado."
+  verify-fail: "{prefix} &cCódigo 2FA inválido. Tenta novamente."
+  verify-backup-used: "{prefix} &a2FA verificado usando código de backup! &eConsidera gerar novos códigos se estiveres a ficar sem."
+  lockout: "{prefix} &cDemasiadas tentativas 2FA falhadas. Tenta novamente em &f{seconds}s&c."
+  not-pending: "{prefix} &7Não estás pendente de verificação 2FA."
+  not-enabled: "{prefix} &7O 2FA não está ativo na tua conta."
+  already-enabled: "{prefix} &cO 2FA já está ativo na tua conta."
+  setup-link: "{prefix} &aClica aqui para configurar o 2FA (abre no browser): {url}"
+  setup-browser-hint: "{prefix} &7Completa toda a configuração no teu browser. Digitaliza o QR, insere o código, e está feito!"
+  setup-manual: "{prefix} &7Adiciona este segredo manualmente à tua app de autenticação: &e{secret}"
+  setup-uri: "{prefix} &7URI OTPAuth: &f{uri}"
+  setup-confirm-hint: "{prefix} &7Depois de adicionar o segredo, escreve &f/2fa confirm <código de 6 dígitos> &7para ativar o 2FA."
+  setup-use-browser: "{prefix} &7Por favor usa &f/2fa setup &7e completa a configuração no teu browser."
+  setup-expired: "{prefix} &cToken de configuração expirado. Usa &f/2fa setup &cnovamente."
+  confirm-usage: "{prefix} &7Uso: &f/2fa confirm <código de 6 dígitos>"
+  confirm-success: "{prefix} &aO 2FA foi ativado na tua conta! Terás de inserir um código sempre que fizeres login."
+  confirm-fail: "{prefix} &cCódigo inválido. Certifica-te de que digitalizaste o QR correto e tenta novamente."
+  invalid-code: "{prefix} &cIntroduz um número válido de 6 dígitos."
+  disable-usage: "{prefix} &7Uso: &f/2fa disable <código de 6 dígitos>"
+  disable-success: "{prefix} &eO 2FA foi desativado na tua conta."
+  disable-fail: "{prefix} &cCódigo 2FA inválido. Não é possível desativar o 2FA."
+  status-enabled: "{prefix} &aO 2FA está &fATIVADO &ana tua conta."
+  status-disabled: "{prefix} &7O 2FA está &fDESATIVADO &7na tua conta."
+  backup-codes-header: "{prefix} &c⚠ &eGuarda estes códigos de backup! Cada um pode ser usado uma vez:"
+  backup-codes-footer: "{prefix} &c⚠ &eEstes códigos NÃO serão mostrados novamente. Guarda-os em segurança!"
+  ops-require-setup: "{prefix} &c⚠ Contas privilegiadas requerem 2FA. &7Usa &f/2fa setup &7para ativá-lo antes de poderes jogar."
+
+help:
+  title: "{prefix} &bAjuda de autenticação"
+  unregistered:
+    - "&f/register <password> <password> &7- Criar conta"
+    - "&f/authhelp &7- Mostrar ajuda"
+  locked:
+    - "&f/login <password> &7- Entrar"
+    - "&f/autologin <on|off|status> &7- Auto-login por IP confiável"
+    - "&f/changepassword <old> <new> <confirm> &7- Alterar palavra-passe"
+    - "&f/recover &7- Recuperar conta se esqueceste a palavra-passe"
+    - "&f/recovery <...> &7- Configurar pergunta/resposta"
+    - "&f/authhelp &7- Mostrar ajuda"
+  twofa-pending:
+    - "&f/2fa code <código de 6 dígitos> &7- Inserir código 2FA"
+    - "&f/2fa status &7- Verificar estado do 2FA"
+    - "&f/2fa setup &7- Configurar 2FA (se ainda não ativado)"
+    - "&f/logout &7- Sair"
+    - "&f/authhelp &7- Mostrar ajuda"
+  logged:
+    - "&f/changepassword <old> <new> <confirm> &7- Alterar palavra-passe"
+    - "&f/autologin <on|off|status> &7- Auto-login por IP confiável"
+    - "&f/recovery <...> &7- Configurar pergunta/resposta"
+    - "&f/2fa setup &7- Configurar autenticação de dois fatores"
+    - "&f/2fa disable <código> &7- Desativar 2FA"
+    - "&f/2fa status &7- Verificar estado do 2FA"
+    - "&f/authadmin &7- Comandos de admin (apenas OP)"
+    - "&f/logout &7- Sair"
+    - "&f/authhelp &7- Mostrar ajuda"
+
+# ============================================================
+# Comandos de Admin (apenas OP, requer 2FA do admin)
+# ============================================================
+admin:
+  usage: "{prefix} &7Uso: &f/authadmin <lookup|setpassword|delete|reset2fa|reload> <jogador> [args...]"
+  requires-2fa: "{prefix} &cTens de ter o 2FA ativo na tua própria conta para usar comandos de admin."
+  2fa-failed: "{prefix} &cCódigo 2FA inválido. Ação de admin negada."
+  player-not-found: "{prefix} &cJogador &f{player}&c não encontrado na base de dados."
+  lookup-usage: "{prefix} &7Uso: &f/authadmin lookup <jogador>"
+  lookup-header: "{prefix} &b--- Info da conta de &f{player} &b---"
+  lookup-registered: "{prefix} &7Registado: &f{value}"
+  lookup-2fa: "{prefix} &72FA: &f{value}"
+  lookup-recovery: "{prefix} &7Recuperação: &f{value}"
+  lookup-autologin: "{prefix} &7Auto-login: &f{value}"
+  lookup-last-ip: "{prefix} &7Último IP: &f{value}"
+  setpassword-usage: "{prefix} &7Uso: &f/authadmin setpassword <jogador> <novapassword> <teu-código-2fa>"
+  setpassword-success: "{prefix} &aA palavra-passe de &f{player}&a foi alterada."
+  delete-usage: "{prefix} &7Uso: &f/authadmin delete <jogador> <teu-código-2fa>"
+  delete-success: "{prefix} &aA conta de &f{player}&a foi eliminada."
+  reset2fa-usage: "{prefix} &7Uso: &f/authadmin reset2fa <jogador> <teu-código-2fa>"
+  reset2fa-success: "{prefix} &aO 2FA de &f{player}&a foi reiniciado."
+  2fa-not-active: "{prefix} &7O jogador &f{player}&7 não tem o 2FA ativo."
+  your-password-changed: "{prefix} &c⚠ Um admin alterou a tua palavra-passe. Foste desligado."
+  your-account-deleted: "{prefix} &c⚠ Um admin eliminou a tua conta. Foste desligado."
+  your-2fa-reset: "{prefix} &c⚠ Um admin reiniciou o teu 2FA. Foste desligado."
+  reload-success: "{prefix} &aConfiguração e ficheiros de idioma recarregados."
+

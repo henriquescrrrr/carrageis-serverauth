@@ -1,0 +1,53 @@
+name: ServerAUTH
+version: '${project.version}'
+main: pt.henrique.serverauth.ServerAUTH
+api-version: '1.21'
+author: Henrique
+softdepend:
+  - PlayerSettings
+  - floodgate
+
+commands:
+  register:
+    description: Register an account
+    usage: /register <password> <password>
+  login:
+    description: Login to your account
+    usage: /login <password>
+  changepassword:
+    description: Change your password
+    usage: /changepassword <oldPassword> <newPassword> <confirm>
+    aliases: [cpw]
+  logout:
+    description: Log out
+    usage: /logout
+  autologin:
+    description: Trusted IP auto-login
+    usage: /autologin <on|off|status>
+  recovery:
+    description: Configure recovery question/answer
+    usage: /recovery <setquestion|setanswer|status>
+  recover:
+    description: Recover account using recovery answer
+    usage: /recover
+  authhelp:
+    description: Authentication help
+    usage: /authhelp
+  help:
+    description: Authentication help (only when override-help-command is enabled)
+    usage: /help
+  2fa:
+    description: Two-factor authentication management
+    usage: /2fa <setup|confirm|code|verify|disable|status>
+    aliases: [twofa, totp]
+  authadmin:
+    description: Admin auth management (requires OP + 2FA)
+    usage: /authadmin <lookup|setpassword|delete|reset2fa|reload> <player> [args...]
+    permission: serverauth.admin
+
+permissions:
+  serverauth.use:
+    default: true
+  serverauth.admin:
+    default: op
+    description: Allows use of /authadmin commands

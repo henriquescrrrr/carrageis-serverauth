@@ -1,0 +1,181 @@
+prefix: "&8[&bAuth&8]&r"
+
+auth:
+  title:
+    register: "&cREGISTER"
+    register-sub: "&7Use &f/register <password> <password>"
+    login: "&cLOGIN"
+    login-sub: "&7Use &f/login <password>"
+    twofa: "&62FA REQUIRED"
+    twofa-sub: "&7Use &f/2fa code <6-digit code>"
+
+errors:
+  players-only: "{prefix} &cThis command can only be used by players."
+  no-permission: "{prefix} &cYou don't have permission."
+  must-login: "{prefix} &cYou must login first."
+  must-register: "{prefix} &cYou must register first."
+  command-blocked: "{prefix} &cYou must login first. Allowed: &f/register, /login, /recover, /2fa&c."
+  locked-out-login: "{prefix} &cToo many login attempts. Try again in &f{seconds}s&c."
+  locked-out-recovery: "{prefix} &cToo many recovery attempts. Try again in &f{seconds}s&c."
+
+register:
+  usage: "{prefix} &7Usage: &f/register <password> <password>"
+  already-registered: "{prefix} &cYou are already registered."
+  max-accounts-per-ip: "{prefix} &cToo many accounts from your connection (limit: &f{max}&c). Contact an admin if this is a mistake."
+  password-too-short: "{prefix} &cPassword must be at least &f{min}&c characters."
+  password-mismatch: "{prefix} &cPasswords do not match."
+  success: "{prefix} &aRegistered!"
+
+recovery-recommend:
+  line1: "{prefix} &eWe strongly recommend setting up account recovery questions, so if you forget your password you can recover it."
+  line2: "{prefix} &7Use &f/recovery setquestion <question...>&7 and then &f/recovery setanswer <answer...>&7."
+
+login:
+  usage: "{prefix} &7Usage: &f/login <password>"
+  not-registered: "{prefix} &cYou are not registered. Use &f/register <password> <password>&c."
+  success: "{prefix} &aLogged in."
+  wrong-password: "{prefix} &cWrong password."
+  autologin: "{prefix} &aAuto-login accepted (trusted IP)."
+  grace: "{prefix} &aWelcome back! Session restored."
+  uuid-mismatch: "{prefix} &cAccount mismatch detected. Please login manually with &f/login <password>&c."
+  fingerprint-mismatch: "{prefix} &eClient verification failed. Please login with &f/login <password>&e."
+  autologin-denied: "{prefix} &cAuto-login denied for security reasons. Use &f/login <password>&c."
+
+security:
+  uuid-mismatch-warning: "{prefix} &c⚠ UUID mismatch for &f{player}&c: expected &f{expected}&c got &f{actual}&c from IP &f{ip}&c."
+  login-failure-warning: "{prefix} &c⚠ Failed login for &f{player}&c from IP &f{ip}&c."
+  admin-action: "{prefix} &e⚙ Admin &f{admin}&e performed &f{action}&e on &f{player}&e."
+
+changepassword:
+  usage: "{prefix} &7Usage: &f/changepassword <oldPassword> <newPassword> <confirm>"
+  success: "{prefix} &aPassword changed successfully."
+  wrong-old: "{prefix} &cOld password is incorrect."
+
+logout:
+  success: "{prefix} &eYou have been logged out."
+
+autologin:
+  usage: "{prefix} &7Usage: &f/autologin <on|off|status>"
+  status-on: "{prefix} &aAuto-login is &fON&a."
+  status-off: "{prefix} &cAuto-login is &fOFF&c."
+  enabled: "{prefix} &aAuto-login enabled."
+  disabled: "{prefix} &eAuto-login disabled."
+
+recovery:
+  must-set-question-first: "{prefix} &cSet a recovery question first: &f/recovery setquestion <question...>"
+  setquestion-usage: "{prefix} &7Usage: &f/recovery setquestion <question...>"
+  setanswer-usage: "{prefix} &7Usage: &f/recovery setanswer <answer...>"
+  setquestion-success: "{prefix} &aRecovery question saved."
+  setanswer-success: "{prefix} &aRecovery answer saved."
+  status-none: "{prefix} &eRecovery is not configured."
+  status-ok: "{prefix} &aRecovery is configured."
+
+recover:
+  usage: "{prefix} &7Usage: &f/recover &7| &f/recover answer <answer...> &7| &f/recover 2fa <code> &7| &f/recover setpassword <new> <confirm>"
+  not-registered: "{prefix} &cYou are not registered."
+  no-recovery: "{prefix} &cThis account has no recovery method set up (no question and no 2FA)."
+  use-2fa-code: "{prefix} &72FA is enabled on your account. Use &f/recover 2fa <6-digit code> &7to verify your identity, then &f/recover setpassword <new> <confirm>&7."
+  2fa-usage: "{prefix} &7Usage: &f/recover 2fa <6-digit code>"
+  2fa-accepted: "{prefix} &a2FA code accepted. Now set a new password: &f/recover setpassword <new> <confirm>"
+  2fa-wrong: "{prefix} &cInvalid 2FA code."
+  no-2fa-use-questions: "{prefix} &72FA is not enabled. Use &f/recover answer <answer...> &7instead."
+  question: "{prefix} &7Recovery question: &f{question}"
+  answer-hint: "{prefix} &7Answer with: &f/recover answer <your answer...>"
+  answer-usage: "{prefix} &7Usage: &f/recover answer <answer...>"
+  answer-wrong: "{prefix} &cIncorrect recovery answer."
+  answer-correct: "{prefix} &aAnswer accepted. Now set a new password: &f/recover setpassword <new> <confirm>"
+  must-verify-first: "{prefix} &cYou must verify your identity first. Use &f/recover answer <answer...> &cor &f/recover 2fa <code>&c."
+  setpassword-usage: "{prefix} &7Usage: &f/recover setpassword <new> <confirm>"
+  setpassword-success: "{prefix} &aPassword reset successful. Use &f/login <password>&a."
+
+# ============================================================
+# Two-Factor Authentication
+# ============================================================
+2fa:
+  usage: "{prefix} &7Usage: &f/2fa <setup|code|disable|status>"
+  disabled-by-server: "{prefix} &cTwo-factor authentication is not enabled on this server."
+  verify-prompt: "{prefix} &62FA verification required. &7Use &f/2fa code <6-digit code> &7or a backup code."
+  verify-usage: "{prefix} &7Usage: &f/2fa code <6-digit code>"
+  verify-success: "{prefix} &a2FA verified! You are now fully authenticated."
+  verify-fail: "{prefix} &cInvalid 2FA code. Please try again."
+  verify-backup-used: "{prefix} &a2FA verified using a backup code! &eConsider regenerating codes if running low."
+  lockout: "{prefix} &cToo many failed 2FA attempts. Try again in &f{seconds}s&c."
+  not-pending: "{prefix} &7You are not pending 2FA verification."
+  not-enabled: "{prefix} &72FA is not enabled on your account."
+  already-enabled: "{prefix} &c2FA is already enabled on your account."
+  setup-link: "{prefix} &aClick here to set up 2FA (opens in browser): {url}"
+  setup-browser-hint: "{prefix} &7Complete the entire setup in your browser. Scan the QR, enter the code, and you're done!"
+  setup-manual: "{prefix} &7Add this secret manually to your authenticator app: &e{secret}"
+  setup-uri: "{prefix} &7OTPAuth URI: &f{uri}"
+  setup-confirm-hint: "{prefix} &7After adding the secret, type &f/2fa confirm <6-digit code> &7to enable 2FA."
+  setup-use-browser: "{prefix} &7Please use &f/2fa setup &7and complete the setup in your browser."
+  setup-expired: "{prefix} &cSetup token expired. Run &f/2fa setup &cagain."
+  confirm-usage: "{prefix} &7Usage: &f/2fa confirm <6-digit code>"
+  confirm-success: "{prefix} &a2FA has been enabled on your account! You will need to enter a code every time you log in."
+  confirm-fail: "{prefix} &cInvalid code. Make sure you scanned the correct QR code and try again."
+  invalid-code: "{prefix} &cPlease enter a valid 6-digit number."
+  disable-usage: "{prefix} &7Usage: &f/2fa disable <6-digit code>"
+  disable-success: "{prefix} &e2FA has been disabled on your account."
+  disable-fail: "{prefix} &cInvalid 2FA code. Cannot disable 2FA."
+  status-enabled: "{prefix} &a2FA is &fENABLED &aon your account."
+  status-disabled: "{prefix} &72FA is &fDISABLED &7on your account."
+  backup-codes-header: "{prefix} &c⚠ &eSave these backup codes! Each can be used once:"
+  backup-codes-footer: "{prefix} &c⚠ &eThese codes will NOT be shown again. Store them safely!"
+  ops-require-setup: "{prefix} &c⚠ Privileged accounts require 2FA. &7Use &f/2fa setup &7to enable it before you can play."
+
+help:
+  title: "{prefix} &bAuth help"
+  unregistered:
+    - "&f/register <password> <password> &7- Create your account"
+    - "&f/authhelp &7- Show this help"
+  locked:
+    - "&f/login <password> &7- Login"
+    - "&f/autologin <on|off|status> &7- Trusted IP auto-login"
+    - "&f/changepassword <old> <new> <confirm> &7- Change password"
+    - "&f/recover &7- Recover account if you forgot password"
+    - "&f/recovery <...> &7- Configure recovery question/answer"
+    - "&f/authhelp &7- Show this help"
+  twofa-pending:
+    - "&f/2fa code <6-digit code> &7- Enter your 2FA code"
+    - "&f/2fa status &7- Check 2FA status"
+    - "&f/2fa setup &7- Set up 2FA (if not yet enabled)"
+    - "&f/logout &7- Logout"
+    - "&f/authhelp &7- Show this help"
+  logged:
+    - "&f/changepassword <old> <new> <confirm> &7- Change password"
+    - "&f/autologin <on|off|status> &7- Trusted IP auto-login"
+    - "&f/recovery <...> &7- Configure recovery question/answer"
+    - "&f/2fa setup &7- Set up two-factor authentication"
+    - "&f/2fa disable <code> &7- Disable 2FA"
+    - "&f/2fa status &7- Check 2FA status"
+    - "&f/authadmin &7- Admin commands (OP only)"
+    - "&f/logout &7- Logout"
+    - "&f/authhelp &7- Show this help"
+
+# ============================================================
+# Admin Commands (OP only, requires admin's own 2FA)
+# ============================================================
+admin:
+  usage: "{prefix} &7Usage: &f/authadmin <lookup|setpassword|delete|reset2fa|reload> <player> [args...]"
+  requires-2fa: "{prefix} &cYou must have 2FA enabled on your own account to use admin commands."
+  2fa-failed: "{prefix} &cInvalid 2FA code. Admin action denied."
+  player-not-found: "{prefix} &cPlayer &f{player}&c not found in the database."
+  lookup-usage: "{prefix} &7Usage: &f/authadmin lookup <player>"
+  lookup-header: "{prefix} &b--- Account info for &f{player} &b---"
+  lookup-registered: "{prefix} &7Registered: &f{value}"
+  lookup-2fa: "{prefix} &72FA: &f{value}"
+  lookup-recovery: "{prefix} &7Recovery: &f{value}"
+  lookup-autologin: "{prefix} &7Auto-login: &f{value}"
+  lookup-last-ip: "{prefix} &7Last IP: &f{value}"
+  setpassword-usage: "{prefix} &7Usage: &f/authadmin setpassword <player> <newpassword> <your-2fa-code>"
+  setpassword-success: "{prefix} &aPassword for &f{player}&a has been changed."
+  delete-usage: "{prefix} &7Usage: &f/authadmin delete <player> <your-2fa-code>"
+  delete-success: "{prefix} &aAccount for &f{player}&a has been deleted."
+  reset2fa-usage: "{prefix} &7Usage: &f/authadmin reset2fa <player> <your-2fa-code>"
+  reset2fa-success: "{prefix} &a2FA for &f{player}&a has been reset."
+  2fa-not-active: "{prefix} &7Player &f{player}&7 does not have 2FA active."
+  your-password-changed: "{prefix} &c⚠ An admin has changed your password. You have been logged out."
+  your-account-deleted: "{prefix} &c⚠ An admin has deleted your account. You have been logged out."
+  your-2fa-reset: "{prefix} &c⚠ An admin has reset your 2FA. You have been logged out."
+  reload-success: "{prefix} &aConfiguration and language files reloaded."
+

@@ -1,0 +1,228 @@
+# ServerAUTH configuration
+#
+# ============================================================
+# OFFLINE-MODE (CRACKED) SERVERS — READ THIS
+# ============================================================
+# On an offline-mode server (online-mode=false), a player's UUID is derived
+# deterministically from their username. This has two consequences:
+#   1. UUID matching (autologin.require-uuid-match) gives almost NO protection
+#      against impersonation — anyone joining with the same name gets the same UUID.
+#      It still helps reject same-name-different-case spoofing, so leave it on.
+#   2. The client brand/settings "fingerprint" is fully controlled by the client
+#      and can be faked, so it is defence-in-depth only, NOT a real barrier.
+#
+# => On cracked servers the PASSWORD is the only real authentication gate, with
+#    2FA as the strong second factor. Encourage players to enable 2FA, keep
+#    max-login-attempts low, and consider max-accounts-per-ip (policy section).
+# ============================================================
+
+# Player-facing language. Bundled locales: pt_PT (default), en_US, fr_FR.
+# Drop extra <locale>.yml files in the plugin's lang/ folder to add more.
+language: pt_PT
+
+# If true, registers /help as an alias for /authhelp.
+# If false, only /authhelp is provided to avoid conflicts with other plugins.
+override-help-command: false
+
+password:
+  min-length: 6
+  require-confirm-match: true
+
+# After a player disconnects, they can reconnect within this many seconds without
+# re-entering their password, IF they return from the SAME IP. Set to 0 to always
+# require the password on reconnect.
+# Cracked-server note: this is a convenience-vs-security tradeoff — on offline-mode
+# the only check is the IP, so someone behind the same NAT could reuse the window.
+# Players with 2FA enabled are ALWAYS re-challenged for their 2FA code, so the grace
+# never skips 2FA. Lower this (or set 0) if you want maximum strictness.
+reconnect-grace-seconds: 60
+
+security:
+  max-login-attempts: 5
+  login-lockout-seconds: 300
+  max-recovery-attempts: 5
+  recovery-lockout-seconds: 300
+  # Optional: always require login again after X hours (0 disables)
+  session-expiry-hours: 0
+  bcrypt-cost: 12
+  # If true, kick the player after max login attempts instead of just locking them out
+  kick-on-max-attempts: false
+  # If true, log all login attempts (success and failure) to a file
+  log-login-attempts: true
+  # Log file path (relative to plugin data folder)
+  login-log-file: "auth-log.txt"
+  # If true, notify online OPs when a login fails
+  notify-ops-on-failed-login: false
+  # If true, notify online OPs when a UUID mismatch is detected (possible account theft attempt)
+  notify-ops-on-uuid-mismatch: true
+
+lockdown:
+  enabled: true
+  apply-darkness: true
+  teleport-to-auth-spawn: false
+  # Format: world,x,y,z,yaw,pitch
+  spawn-location: "world,0.5,100,0.5,0,0"
+  # If true, during login/2FA the player is teleported to login-spawn-location
+  # After fully authenticated, they are teleported back to their last logout location
+  hide-coordinates-during-login: true
+  # Format: world,x,y,z,yaw,pitch
+  # Default: 0,0,0 (spawn of the world)
+  login-spawn-location: "world,0,0,0,0,0"
+  allowed-commands:
+    - "/register"
+    - "/login"
+    - "/authhelp"
+    - "/help"
+    - "/autologin"
+    - "/changepassword"
+    - "/logout"
+    - "/recover"
+    - "/recovery"
+    - "/2fa"
+
+# How often to show an on-screen title reminder to unauthenticated players.
+# Set to 0 to disable repeating titles.
+title-reminder-interval-seconds: 5
+
+# If true, players that are registered but have no recovery configured will be reminded on join.
+remind-recovery-on-join: false
+
+# ============================================================
+# Auto-login settings (4-layer verification)
+# ============================================================
+autologin:
+  # Require UUID match for auto-login (strongly recommended)
+  require-uuid-match: true
+  # Require IP to match a trusted IP for auto-login
+  require-ip-match: true
+  # Require client fingerprint to match for auto-login
+  require-fingerprint-match: true
+  # If true, log detailed auto-login decisions to console (for debugging)
+  debug-autologin: false
+  # How many ticks to delay the auto-login check after join
+  # (to allow client brand/settings to arrive via plugin message)
+  delay-ticks: 10
+  # If true, when a UUID mismatch is detected, log a WARNING to console
+  log-uuid-mismatch-warning: true
+  # If true, when a fingerprint mismatch is detected, log an INFO to console
+  log-fingerprint-mismatch: true
+
+# ============================================================
+# Client fingerprinting
+# ============================================================
+fingerprint:
+  # If true, capture and store client brand (vanilla, fabric, forge, etc.)
+  capture-brand: true
+  # If true, capture and store client settings hash (locale, view distance, etc.)
+  capture-settings: true
+  # If true, require brand to match for auto-login
+  # If false, brand is stored but not checked
+  enforce-brand: true
+  # If true, require settings hash to match for auto-login
+  # Settings change legitimately (e.g., changing render distance), so this can cause false denials.
+  # Recommended: false for most servers
+  enforce-settings: false
+
+# ============================================================
+# Bedrock / Floodgate crossplay
+# ============================================================
+floodgate:
+  # Auto-login Bedrock (Floodgate) players. Floodgate verifies the player's
+  # Xbox Live identity before they reach the server, so they're trusted and
+  # skip register/login/2FA entirely. Set false to make Bedrock players
+  # register/login like Java players. No effect if Floodgate isn't installed.
+  auto-login: true
+
+# ============================================================
+# Two-Factor Authentication (TOTP, Google Authenticator compatible)
+# ============================================================
+two-factor:
+  enabled: true
+  # Number of backup codes generated during 2FA setup
+  backup-code-count: 8
+  # Max failed 2FA verify attempts before lockout
+  max-verify-attempts: 5
+  # Lockout duration in seconds after max failed attempts
+  verify-lockout-seconds: 300
+  # How long a setup token is valid (in minutes).
+  # Keep this generous — first-time users need time to install an authenticator app,
+  # scan the QR and type the code. Too short = a correct code is rejected as "expired".
+  setup-token-expiry-minutes: 15
+
+  # ---- Smart 2FA prompting (IP-based skip) ----
+  # If true, 2FA is only required when the player's IP changes from
+  # the last IP that successfully completed 2FA verification.
+  # If false (default), 2FA is required on every login.
+  require-only-on-ip-change: false
+
+  # Random challenge: even when IP matches, occasionally require 2FA anyway.
+  # Only applies when require-only-on-ip-change is true.
+  same-ip-random-challenge:
+    enabled: false
+    # On average, 1 in N same-IP logins will still require 2FA.
+    one-in-n: 10
+
+  # Hard safety fallback: if the last 2FA verification was more than
+  # this many hours ago, require 2FA regardless of IP match.
+  # Set to 0 to disable this check.
+  max-trusted-session-hours: 0
+
+  # If true, log a debug message when 2FA is skipped (or random-challenged).
+  # Useful for testing; disable in production.
+  debug-skip-messages: false
+
+# ============================================================
+# Policy enforcement
+# ============================================================
+policy:
+  # If true, players who are OP must have 2FA enabled.
+  # They will be blocked at the 2FA-pending stage until they set up 2FA.
+  require-2fa-for-ops: true
+  # If true, players with the permission 'serverauth.admin' must have 2FA
+  require-2fa-for-admins: true
+  # Maximum number of accounts allowed from the same IP (0 = unlimited).
+  # Counts accounts whose last-seen IP matches. Helps curb mass registration on
+  # cracked servers. Note: players behind the same NAT/household share an IP, so
+  # keep this above 1 if you expect legitimate shared connections.
+  max-accounts-per-ip: 0
+  # If true, new registrations are blocked when the server is in maintenance mode
+  block-registration-in-maintenance: false
+  # Session timeout: force re-login after this many minutes of inactivity (0 = disabled)
+  inactivity-timeout-minutes: 0
+
+# ============================================================
+# Built-in web server for 2FA setup pages
+# ============================================================
+# SECURITY: the setup page shows the TOTP secret and one-time backup codes.
+# This server speaks plain HTTP. The QR code is generated locally (the secret is
+# never sent to any third-party service), but the page itself is NOT encrypted.
+#   - If players only set up 2FA from the same machine, bind to host "127.0.0.1".
+#   - If players need remote access, put this behind a reverse proxy with HTTPS
+#     (e.g. nginx/Caddy) and set public-url to the https:// address.
+#   - Avoid exposing the raw port 8921 to the public internet over http://.
+web-server:
+  enabled: true
+  # The port the built-in HTTP server listens on
+  port: 8921
+  # Bind address. Default 127.0.0.1 = local only (safer — the page shows the TOTP
+  # secret and backup codes over plain HTTP). Use 0.0.0.0 (all interfaces) ONLY if
+  # you put this behind an HTTPS reverse proxy, and set public-url accordingly.
+  host: "127.0.0.1"
+  # Public URL players will see in chat (change this to your server's domain/IP,
+  # and use https:// if you put it behind a TLS reverse proxy)
+  public-url: "http://localhost:8921"
+
+# ============================================================
+# Storage
+# ============================================================
+storage:
+  type: sqlite # sqlite or mysql
+  sqlite:
+    file: "auth.db"
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "minecraft"
+    username: "root"
+    password: ""
+    use-ssl: false
