@@ -187,8 +187,6 @@ policy:
   max-accounts-per-ip: 0
   # If true, new registrations are blocked when the server is in maintenance mode
   block-registration-in-maintenance: false
-  # Session timeout: force re-login after this many minutes of inactivity (0 = disabled)
-  inactivity-timeout-minutes: 0
 
 # ============================================================
 # Built-in web server for 2FA setup pages

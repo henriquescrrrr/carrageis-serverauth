@@ -220,15 +220,13 @@ public record PluginConfig(
     }
 
     public record PolicyConfig(boolean opsRequire2FA, boolean adminsRequire2FA,
-                                int maxAccountsPerIp, boolean blockRegistrationInMaintenance,
-                                int inactivityTimeoutMinutes) {
+                                int maxAccountsPerIp, boolean blockRegistrationInMaintenance) {
         static PolicyConfig from(ConfigurationSection sec) {
             boolean ops = sec != null && sec.getBoolean("require-2fa-for-ops", true);
             boolean admins = sec != null && sec.getBoolean("require-2fa-for-admins", true);
             int maxPerIp = sec != null ? sec.getInt("max-accounts-per-ip", 0) : 0;
             boolean blockReg = sec != null && sec.getBoolean("block-registration-in-maintenance", false);
-            int inactivity = sec != null ? sec.getInt("inactivity-timeout-minutes", 0) : 0;
-            return new PolicyConfig(ops, admins, Math.max(0, maxPerIp), blockReg, Math.max(0, inactivity));
+            return new PolicyConfig(ops, admins, Math.max(0, maxPerIp), blockReg);
         }
     }
 
