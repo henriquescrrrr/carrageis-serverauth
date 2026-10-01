@@ -1,7 +1,7 @@
 name: ServerAUTH
 version: '${project.version}'
 main: pt.henrique.serverauth.ServerAUTH
-api-version: '1.21'
+api-version: "26.3"
 author: Henrique
 softdepend:
   - PlayerSettings

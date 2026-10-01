@@ -91,8 +91,9 @@ public final class SetupWebServer {
             return;
         }
 
-        // Cap the request body to avoid a memory-exhaustion DoS from an oversized POST
-        // (the server binds 0.0.0.0 by default and has no other request-size limit).
+        // Cap the request body to avoid a memory-exhaustion DoS from an oversized POST.
+        // The default bind is 127.0.0.1, but the documented deployment puts this behind
+        // a reverse proxy, so treat the body as untrusted and bounded.
         byte[] rawBody = readLimited(ex.getRequestBody(), 8192);
         if (rawBody == null) {
             respond(ex, 413, "text/html", errorPage("Request too large", "The submitted form was too large."));

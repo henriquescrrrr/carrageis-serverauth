@@ -83,6 +83,15 @@ public final class TwoFactorService {
         GoogleAuthenticatorKey key = gAuth.createCredentials();
         String secret = key.getKey();
 
+        // Invalidate any earlier link for this player. Without this the previous
+        // token string stays in webTokens and resolves to the new setup session,
+        // so an older link that leaked (pasted in chat, browser history, a proxy
+        // log) would still enrol an authenticator against the new secret.
+        SetupToken previous = setupTokens.remove(uuid);
+        if (previous != null) {
+            webTokens.remove(previous.webToken());
+        }
+
         // Generate random web token
         String webToken = generateRandomToken();
 

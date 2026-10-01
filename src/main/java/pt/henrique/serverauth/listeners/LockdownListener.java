@@ -8,11 +8,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import pt.henrique.serverauth.auth.LockdownService;
 import pt.henrique.serverauth.config.PluginConfig;
@@ -157,6 +159,46 @@ public final class LockdownListener implements Listener {
     public void onInvDrag(InventoryDragEvent e) {
         if (!cfg.lockdown().enabled()) return;
         if (e.getWhoClicked() instanceof Player p && locked(p)) {
+            e.setCancelled(true);
+        }
+    }
+
+    // Swapping main hand and off hand is its own packet with its own handler list —
+    // no InventoryClickEvent and no PlayerInteractEvent is fired for it, so the
+    // inventory handlers above do not cover it.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSwapHands(PlayerSwapHandItemsEvent e) {
+        if (!cfg.lockdown().enabled()) return;
+        if (locked(e.getPlayer())) {
+            e.setCancelled(true);
+        }
+    }
+
+    // Writing or signing a book arrives as a dedicated packet. It is not a command
+    // and it is not preceded by any interact event, so it has no other gate.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEditBook(PlayerEditBookEvent e) {
+        if (!cfg.lockdown().enabled()) return;
+        if (locked(e.getPlayer())) {
+            e.setCancelled(true);
+        }
+    }
+
+    // Hanging entities (item frames, paintings) do not fire EntityDamageByEntityEvent
+    // when a player breaks them, and an attack is not a PlayerInteractEntityEvent —
+    // so without this an unauthenticated player can drop their contents.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onHangingBreak(HangingBreakByEntityEvent e) {
+        if (!cfg.lockdown().enabled()) return;
+        if (e.getRemover() instanceof Player p && locked(p)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onItemFrameChange(PlayerItemFrameChangeEvent e) {
+        if (!cfg.lockdown().enabled()) return;
+        if (locked(e.getPlayer())) {
             e.setCancelled(true);
         }
     }

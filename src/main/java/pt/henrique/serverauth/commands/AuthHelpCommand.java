@@ -25,14 +25,15 @@ public final class AuthHelpCommand extends BaseCommand {
         if (p == null) return true;
 
         msg.send(p, "help.title");
-        // Help state uses sync DB call; small but ok. Could be improved later.
-        AuthService.AuthHelpState state = auth.helpState(p);
-        switch (state) {
-            case UNREGISTERED -> msg.sendList(p, "help.unregistered", java.util.Map.of());
-            case LOCKED -> msg.sendList(p, "help.locked", java.util.Map.of());
-            case TWO_FA_PENDING -> msg.sendList(p, "help.twofa-pending", java.util.Map.of());
-            case LOGGED_IN -> msg.sendList(p, "help.logged", java.util.Map.of());
-        }
+        auth.helpState(p).thenAccept(state -> auth.async().sync(() -> {
+            if (!p.isOnline()) return;
+            switch (state) {
+                case UNREGISTERED -> msg.sendList(p, "help.unregistered", java.util.Map.of());
+                case LOCKED -> msg.sendList(p, "help.locked", java.util.Map.of());
+                case TWO_FA_PENDING -> msg.sendList(p, "help.twofa-pending", java.util.Map.of());
+                case LOGGED_IN -> msg.sendList(p, "help.logged", java.util.Map.of());
+            }
+        }));
         return true;
     }
 }

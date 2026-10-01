@@ -57,6 +57,15 @@ public final class LockdownService {
     public void track(Player p) {
         tracked.add(p.getUniqueId());
 
+        // track() is called from PlayerJoinEvent and again from AuthService.handleJoin
+        // when the session is dropped on an IP change — both in the same tick. A second
+        // capture would read the login spawn as the "real" location and could win the
+        // race against the first call's async write, stranding the player there.
+        if (savedLocations.containsKey(p.getUniqueId())) {
+            applyDarkness(p);
+            return;
+        }
+
         if (cfg.lockdown().hideCoordinatesDuringLogin()) {
             // Capture the real location BEFORE any teleport.
             // The server has placed the player where they logged out.

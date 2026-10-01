@@ -108,6 +108,7 @@ public final class AuthService {
 
     public UserRepository repo() { return repo; }
     public PasswordHasher hasher() { return hasher; }
+    public Async async() { return async; }
 
     // ---- join / quit ----
 
@@ -707,12 +708,18 @@ public final class AuthService {
 
     // ---- help state ----
 
-    public AuthHelpState helpState(Player p) {
-        if (isTwofaPending(p)) return AuthHelpState.TWO_FA_PENDING;
+    /**
+     * Resolves the help state off the main thread. {@code /authhelp} is reachable before a
+     * player authenticates, so a synchronous lookup here lets an unauthenticated connection
+     * drive a database round-trip on the server thread on every invocation.
+     */
+    public CompletableFuture<AuthHelpState> helpState(Player p) {
+        if (isTwofaPending(p)) return CompletableFuture.completedFuture(AuthHelpState.TWO_FA_PENDING);
         String lower = normalize(p.getName());
-        Optional<UserRecord> u = repo.findByUsernameLower(lower);
-        if (u.isEmpty()) return AuthHelpState.UNREGISTERED;
-        return isAuthenticated(p) ? AuthHelpState.LOGGED_IN : AuthHelpState.LOCKED;
+        return async.supply(() -> repo.findByUsernameLower(lower)).thenApply(u -> {
+            if (u.isEmpty()) return AuthHelpState.UNREGISTERED;
+            return isAuthenticated(p) ? AuthHelpState.LOGGED_IN : AuthHelpState.LOCKED;
+        });
     }
 
     // ---- admin operations (all require admin's own 2FA code) ----
